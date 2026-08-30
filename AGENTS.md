@@ -7,7 +7,7 @@ This repository holds **user-level** skills and rules. Agents working in this re
 ```
 skills/<name>/SKILL.md   # Agent Skills spec; folder name must match `name` frontmatter
 rules/<name>.md          # Plain markdown user rules (optional)
-scripts/install.sh       # Sync skills to ~/.agents, ~/.claude, ~/.cursor
+scripts/install.sh       # Sync skills; install rules pointer on each platform
 ```
 
 ## Authoring user skills
@@ -21,10 +21,12 @@ Never use `~/.cursor/skills` as the source of truth for new user skills.
 
 ## Authoring user rules
 
-Prefer a skill unless guidance must be always-on in Cursor. For always-on rules:
+Prefer a skill unless guidance must be always-on. For always-on rules:
 
-1. Write `rules/<name>.md` here for git history.
-2. Tell the user to paste into Cursor Settings → User Rules (Settings is not a file tree).
+1. Write `rules/<name>.md` here (plain markdown).
+2. Run `./scripts/install.sh` once (or again after moving the clone). Install writes a pointer on each platform that tells agents to read and write rules in this repo’s `rules/` directory. Do not copy rule bodies into home directories.
+
+Never treat `~/.cursor/rules`, `~/.claude/rules`, or `~/.codex/AGENTS.md` as source of truth — except the installed `agent-config` pointer itself.
 
 ## Promoting from a project
 

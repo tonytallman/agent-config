@@ -23,20 +23,21 @@ If missing, search for a git repo whose root contains `skills/` and `scripts/ins
 | User skill | `<clone>/skills/<name>/SKILL.md` | Folder name must match `name` in frontmatter ([Agent Skills spec](https://agentskills.io/specification)) |
 | User rule | `<clone>/rules/<name>.md` | Plain markdown; prefer a skill unless always-on |
 
-**Never** treat `~/.cursor/skills`, `~/.agents/skills`, or `~/.claude/skills` as source of truth. Those are install targets only.
+**Never** treat `~/.cursor/skills`, `~/.agents/skills`, `~/.claude/skills`, `~/.cursor/rules`, `~/.claude/rules`, or `~/.codex/AGENTS.md` as source of truth. Those are install targets only (except the installed `agent-config` rules pointer).
 
 ## After writing
 
-1. Run `<clone>/scripts/install.sh` to sync home-dir copies for Cursor, Claude, and Codex.
+1. Run `<clone>/scripts/install.sh` to sync skills and the rules pointer for Cursor, Claude, and Codex.
 2. Do not commit unless the user asks.
 3. When they do, commit **in the agent-config clone**, not in whichever app repo was open.
 
 ## User rules vs skills
 
-Prefer a skill (on-demand via description). If guidance must be always-on in Cursor:
+Prefer a skill (on-demand via description). If guidance must be always-on:
 
-1. Still write `rules/<name>.md` here for git history.
-2. Tell the user to paste the content into Cursor Settings → User Rules (Settings is not a file tree).
+1. Write `rules/<name>.md` here.
+2. Run install once if the rules pointer is not yet installed; adding another rule file does not require reinstall.
+3. Re-run install after moving the clone so the pointer path stays correct.
 
 ## Skill quality
 

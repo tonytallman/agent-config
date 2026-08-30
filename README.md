@@ -9,8 +9,8 @@ This git repository is the canonical location. Do **not** edit `~/.cursor/skills
 | Path | Purpose |
 |------|---------|
 | `skills/<name>/SKILL.md` | User skills (Agent Skills spec) |
-| `rules/<name>.md` | User rules in git; paste into Cursor Settings → User Rules when always-on |
-| `scripts/install.sh` | Copy skills into home-dir load paths |
+| `rules/<name>.md` | User rules in git; agents read via installed platform pointer |
+| `scripts/install.sh` | Copy skills; install rules pointer on each platform |
 
 Default clone location: `~/Projects/agent-config`.
 
@@ -27,6 +27,15 @@ Copies each skill folder to:
 - `~/.agents/skills/` — Cursor, Codex, shared/Xcode-compatible
 - `~/.claude/skills/` — Claude Code
 - `~/.cursor/skills/` — Cursor fallback
+
+Installs one **rules pointer** on each platform (`agent-config`) that tells agents to read and follow all rules from `<clone>/rules`. New rules do not require reinstall; re-run install after moving the clone so the path stays correct.
+
+Pointer destinations:
+
+- `~/.cursor/rules/agent-config.mdc` — Cursor (always apply)
+- `~/.claude/rules/agent-config.md` — Claude Code
+- `~/.agents/rules/agent-config.md` — shared
+- `~/.codex/AGENTS.md` — managed block for Codex
 
 Uses **copy** (rsync), not symlinks — Cursor has historically failed to discover symlinked user skills after restart.
 
