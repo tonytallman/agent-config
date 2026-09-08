@@ -87,7 +87,7 @@ for skill_dir in "${SKILLS_SRC}"/*/; do
     continue
   fi
   for dest in "${SKILL_DESTS[@]}"; do
-    rsync -a --delete "${skill_dir%/}" "${dest}/${name}/"
+    rsync -a --delete "${skill_dir%/}/" "${dest}/${name}/"
   done
   echo "installed ${name}"
 done

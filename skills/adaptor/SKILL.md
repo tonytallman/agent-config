@@ -12,7 +12,7 @@ description: >-
 
 Use when a **specific source type** must be used as a **different interface** (protocol or existing concrete type). Adapt at the composition root; do not widen provider packages or add forbidden local dependencies.
 
-**Adaptor vs decorator:** an adaptor **converts** one type to another. A **protocol-decorator** adds behavior that works on **any** instance of a protocol. Do not mix them — chain at the call site: `source.asSpeedMetric().shared()`.
+**Adaptor vs decorator:** an adaptor **converts** one type to another. A **decorator** adds behavior that works on **any** instance of a protocol. Do not mix them — chain at the call site: `source.asSpeedMetric().shared()`.
 
 Follow **swift-visibility** and **local-package-decoupling**. Place adaptors in the module that can `import` both source and target (usually the composition root / DI package), under `Adaptors/` when the project uses that layout. One adaptor per file under `Adaptors/<Provider>/`, named `{SourceType}+{AdaptedType}.swift` (e.g. `Adaptors/Location/CoreLocationSpeedSource+SpeedMetric.swift`).
 
@@ -120,10 +120,10 @@ public final class AppSettingsToBluetoothSettings: BluetoothSettings { ... }
 // BAD — baking shared()/logging into the adaptor
 extension CoreLocationSpeedSource {
     func asSpeedMetric() -> any Metric<...> {
-        RuntimeMetric(...).shared() // use protocol-decorator at call site
+        RuntimeMetric(...).shared() // use decorator at call site
     }
 }
 
 // BAD — using an adaptor to add cross-cutting behavior to any protocol instance
-// Use protocol-decorator with withLogging() instead.
+// Use decorator with withLogging() instead.
 ```
