@@ -24,6 +24,9 @@ description: >-
 
 When adding a test target in an Xcode app project, add it to the app scheme's Test action. Discover the scheme name from the current repo.
 
+- **App/project test targets:** `ReferencedContainer = container:<App>.xcodeproj`
+- **Local SPM package test targets:** `ReferencedContainer = container:<packages-dir>/<PackageName>` (e.g. `container:Packages/Metrics`). Set `BlueprintIdentifier`, `BlueprintName`, and `BuildableName` to the test target name (no `.xctest` suffix).
+
 ## Tests with functional changes
 
 - Any change that adds, removes, or changes behavior must include corresponding unit test additions, removals, or updates in the mirrored test file.
