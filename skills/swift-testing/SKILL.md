@@ -14,6 +14,14 @@ description: >-
 - Use `@Test`, `#expect`, and `@Suite` where appropriate.
 - Name test types `{TypeUnderTest}Tests`.
 
+## Async tests
+
+- Do not use `Task.sleep` to synchronize a test with async work. It is a race, and it becomes a hang when the expected value never arrives.
+- Use `confirmation()`, or pull the sequence deterministically, so the test blocks on the event rather than on a duration.
+- Do not discard leading elements (`_ = await iterator.next()`) to skip a seeded or replayed value. If which value arrives first depends on scheduling, the discard eats the real value and the test hangs forever.
+- Give suites exercising async streams a time limit (`@Suite(.timeLimit(.minutes(1)))`) so a hang fails with a test name instead of wedging the run.
+- If a type cannot be tested without sleeping, that is a design signal: the type starts unstructured work with no observable completion point. Raise it rather than papering over it.
+
 ## Mirrored folder structure
 
 - Preserve the subdirectory path of the code under test in the test target (drop only the module/source-root prefix when the project uses one).
