@@ -9,35 +9,55 @@ This git repository is the canonical location. Do **not** edit `~/.cursor/skills
 | Path | Purpose |
 |------|---------|
 | `skills/<name>/SKILL.md` | User skills (Agent Skills spec) |
-| `rules/<name>.md` | User rules in git; agents read via installed platform pointer |
-| `scripts/install.sh` | Copy skills; install rules pointer on each platform |
+| `rules/<name>.md` | User rules in git |
+| `exports/cursor-account-user-rules.md` | Account User Rules export for Cursor cloud sync |
+| `scripts/install.sh` | Copy skills and rules to platform install targets |
 
 Default clone location: `~/Projects/agent-config`.
 
 ## Install
 
-After clone, pull, or authoring a new skill:
+After clone, pull, or authoring a new skill or rule:
 
 ```bash
 ./scripts/install.sh
 ```
 
-Copies each skill folder to:
+### Skills
+
+Copies each skill folder (with `SKILL.md`) to:
 
 - `~/.agents/skills/` — Cursor, Codex, shared/Xcode-compatible
 - `~/.claude/skills/` — Claude Code
-- `~/.cursor/skills/` — Cursor fallback
+- `~/.cursor/skills/` — Cursor (synced to Cloud Agents when **Sync Skills for Cloud Agents** is enabled)
 
-Installs one **rules pointer** on each platform (`agent-config`) that tells agents to read and follow all rules from `<clone>/rules`. New rules do not require reinstall; re-run install after moving the clone so the path stays correct.
+Stale destination folders without a matching repo skill are pruned. Install fails if any copied skill is missing `SKILL.md`.
 
-Pointer destinations:
+Uses **copy** (rsync), not symlinks — Cursor has historically failed to discover symlinked user skills after restart.
 
-- `~/.cursor/rules/agent-config.mdc` — Cursor (always apply)
+### Cursor rules (local + cloud)
+
+For each `rules/<name>.md`, install writes `~/.cursor/rules/<name>.mdc` with `alwaysApply: true` and the **full rule body** (copy, not symlink). Also writes `~/.cursor/rules/agent-config.mdc` as a meta rule (repo is source of truth; GitHub fallback when the clone path is unavailable).
+
+**Re-run install after rule changes** so local Cursor copies stay current.
+
+File-based `~/.cursor/rules` do not sync to Cloud Agents. For cloud, paste `exports/cursor-account-user-rules.md` into **Cursor → Customize → Rules** (account User Rules). Regenerate that export with install whenever rules change.
+
+### Other platforms (Claude, agents, Codex)
+
+Installs a **rules pointer** (`agent-config`) that includes the local `rules/` path when readable, plus a GitHub repo fallback when not (e.g. cloud VMs):
+
 - `~/.claude/rules/agent-config.md` — Claude Code
 - `~/.agents/rules/agent-config.md` — shared
 - `~/.codex/AGENTS.md` — managed block for Codex
 
-Uses **copy** (rsync), not symlinks — Cursor has historically failed to discover symlinked user skills after restart.
+### Cloud Agents checklist
+
+After install:
+
+1. Enable **Settings → Agents → Sync Skills for Cloud Agents** (syncs `~/.cursor/skills/`).
+2. Paste or update account User Rules from `exports/cursor-account-user-rules.md` into **Customize → Rules**.
+3. Re-run `./scripts/install.sh` after moving the clone or editing rules.
 
 Restart the IDE or start a new agent session if skills do not appear immediately.
 
